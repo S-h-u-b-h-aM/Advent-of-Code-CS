@@ -11,7 +11,15 @@ public static class Day01
         int totalDistance = left.Order()
             .Zip(right.Order(), (x, y) => Math.Abs(x - y))
             .Sum();
+
+        int similarityScore = right
+            // .Where(x => left.Contains(x))       // O(n) * O(n) = O(n^2)
+            .Where(new HashSet<int>(left).Contains) // O(1) * O(n) = O(n)
+            .Sum();
+            // .GroupBy(x => x)
+            // .Sum(group => group.Key * group.Count());
         Console.WriteLine(totalDistance);
+        Console.WriteLine(similarityScore);
     }
 
     private static (List<int> left, List<int> right) ReadLists(this TextReader text)
