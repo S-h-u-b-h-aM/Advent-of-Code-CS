@@ -2,9 +2,9 @@ using System.Xml.Xsl;
 
 namespace Advent_of_Code;
 
-public static class Day01
+static class Day01
 {
-    public static void Execute()
+    public static void Run()
     {
         (List<int> left, List<int> right) = Console.In.ReadLists();
 
