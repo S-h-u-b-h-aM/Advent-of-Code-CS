@@ -2,11 +2,13 @@ using System.Xml.Xsl;
 
 namespace Advent_of_Code;
 
-static class Day01
+public static class Day01
 {
-    public static void Run()
+    public static void Run(string inputText)
     {
-        (List<int> left, List<int> right) = Console.In.ReadLists();
+        Console.WriteLine("Day 1");
+        Console.WriteLine("Input test data:\n>>" + inputText);
+        (List<int> left, List<int> right) = new StringReader(inputText).LoadLists();
 
         int totalDistance = left.Order()
             .Zip(right.Order(), (x, y) => Math.Abs(x - y))
@@ -25,7 +27,7 @@ static class Day01
     private static (List<int> left, List<int> right) ReadLists(this TextReader text)
     {
         (List<int> left, List<int> right) = (new(), new());
-        while (text.ReadLine() is string line)
+        while (text.ReadLine() is { } line)  // while (text.ReadLine() is string line)   
         {
             var values = line.ParseInts();
             left.Add(values[0]);
@@ -33,4 +35,7 @@ static class Day01
         }
         return (left, right);
     }
+
+    private static (List<int> left, List<int> right) LoadLists(this TextReader text) =>
+        text.ReadLines().Select(Common.ParseIntsNoSign).Transpose().ToPair();
 }

@@ -2,11 +2,14 @@ using System.Dynamic;
 
 namespace Advent_of_Code;
 
-static class Day02
+public static class Day02
 {
-    public static void Run()
+    public static void Run(string inputText)
     {
-        List<List<int>> allLists = Console.In.LoadLists();
+        Console.WriteLine("Day 2");
+        Console.WriteLine("Input test data:\n>>" + inputText);
+        
+        List<List<int>> allLists = new StringReader(inputText).LoadLists();
         int safeCount = allLists.Count(IsSafe);
         int tolerantSafeCount = allLists.Count(list => list.Expand().Any(IsSafe));
         

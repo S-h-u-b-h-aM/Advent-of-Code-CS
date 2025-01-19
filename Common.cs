@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Advent_of_Code;
 
-static class Common
+public static class Common
 {
     public static (T a, T b) ToPair<T>(this List<T> list) => list switch
     {

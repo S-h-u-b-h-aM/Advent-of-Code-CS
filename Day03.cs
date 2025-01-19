@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Advent_of_Code;
 
-static class Day03
+public static class Day03
 {
     public static string Description
     {
@@ -21,9 +21,13 @@ static class Day03
                "Adding up the result of each instruction produces 161 (2*4 + 5*5 + 11*8 + 8*5).\n\nScan the corrupted memory for uncorrupted mul instructions. " +
                "What do you get if you add up all of the results of the multiplications?"; 
     }
-    public static void Run()
+    public static void Run(string inputText)
     {
-        var text = Console.In.ReadLines();
+        // var text = Console.In.ReadLines();
+        Console.WriteLine("Day 3");
+        Console.WriteLine("Input test data:\n>>" + inputText);
+        
+        var text = new StringReader(inputText).ReadLines();
         var instructions = text.SelectMany(Parse).ToList();
         var sum = instructions.OfType<Multiply>().SumProducts();    // Part 1 of Day 3
         var enablingSum = instructions.SumProducts();
@@ -31,7 +35,7 @@ static class Day03
         Console.WriteLine($"  Simple sum: {sum}");
         Console.WriteLine($"Enabling sum: {enablingSum}");
     }
-
+    
     private static int SumProducts(this IEnumerable<Instruction> instructions) =>
         instructions.Aggregate(
             (sum: 0, include: true),
