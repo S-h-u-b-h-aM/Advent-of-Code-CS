@@ -25,13 +25,13 @@ public static class Day03
     {
         // var text = Console.In.ReadLines();
         Console.WriteLine("Day 3");
-        Console.WriteLine("Input test data:\n>>" + inputText);
+        Console.WriteLine("Input test data:\n" + inputText);
         
         var text = new StringReader(inputText).ReadLines();
         var instructions = text.SelectMany(Parse).ToList();
         var sum = instructions.OfType<Multiply>().SumProducts();    // Part 1 of Day 3
         var enablingSum = instructions.SumProducts();
-        
+        Console.WriteLine("\n==============Output==============\n");
         Console.WriteLine($"  Simple sum: {sum}");
         Console.WriteLine($"Enabling sum: {enablingSum}");
     }

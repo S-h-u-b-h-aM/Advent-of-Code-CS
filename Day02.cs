@@ -7,12 +7,13 @@ public static class Day02
     public static void Run(string inputText)
     {
         Console.WriteLine("Day 2");
-        Console.WriteLine("Input test data:\n>>" + inputText);
+        Console.WriteLine("Input test data:\n" + inputText);
         
         List<List<int>> allLists = new StringReader(inputText).LoadLists();
         int safeCount = allLists.Count(IsSafe);
         int tolerantSafeCount = allLists.Count(list => list.Expand().Any(IsSafe));
         
+        Console.WriteLine("\n==============Output==============\n");
         Console.WriteLine($"Total count: {allLists.Count}");
         Console.WriteLine($"Total safe count: {safeCount}");
         Console.WriteLine($"Total tolerant safe count: {tolerantSafeCount}");

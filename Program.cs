@@ -1,12 +1,58 @@
-﻿using Advent_of_Code;
+﻿using System.Reflection;
+using Advent_of_Code;
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-        // Console.WriteLine("3  4\n4  3\n2  5\n1  3\n3  9\n3  3");
-        // Day01.Execute();
-        string testData = "mul(2,4)%mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
-        Day03.Run(testData);
+        // string filename = "Day01.txt";
+        // string filepath = Path.Join(GetResourceDirectory(), filename);
+        // var testData = File.ReadAllText(filepath);
+        // Day01.Run(testData);
+
+        var text2ClassMap = Text2ClassMap();
+        
+        
+        string filename = "Day02.txt";
+        string filepath = Path.Join(GetResourceDirectory(), filename);
+        var testData = File.ReadAllText(filepath);
+        
+        text2ClassMap[filename].Invoke(testData);
+    }
+
+    private static string GetDatafromTextFile(string filepath)
+    {
+        string text = File.ReadAllText(filepath);
+        return text;
+    }
+
+    private static Dictionary<string, Action<string>> Text2ClassMap()
+    {
+        Dictionary<string, Action<string>> text2class_map = new();
+        text2class_map["Day01.txt"] = Day01.Run;
+        text2class_map["Day02.txt"] = Day02.Run;
+        text2class_map["Day03.txt"] = Day03.Run;
+        
+        return text2class_map;
+    }
+
+    private static string GetResourceDirectory()
+    {
+        // return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string assemblyPath = Assembly.GetExecutingAssembly().Location;
+
+        // Get the directory of the assembly
+        string assemblyDir = Path.GetDirectoryName(assemblyPath)!;
+
+        // Navigate back to the project directory
+        string projectDir = Path.GetFullPath(Path.Combine(assemblyDir, @"..\..\.."));
+        
+        string testDataDir = Path.GetFullPath(Path.Combine(projectDir, "TestData"));
+        return testDataDir;
+    }
+    private static void ReadCmdArgs(string[] args)
+    {
+        if (args.Length < 1)
+            return;
     }
 }

@@ -7,7 +7,7 @@ public static class Day01
     public static void Run(string inputText)
     {
         Console.WriteLine("Day 1");
-        Console.WriteLine("Input test data:\n>>" + inputText);
+        Console.WriteLine("Input test data:\n" + inputText);
         (List<int> left, List<int> right) = new StringReader(inputText).LoadLists();
 
         int totalDistance = left.Order()
@@ -20,6 +20,8 @@ public static class Day01
             .Sum();
             // .GroupBy(x => x)
             // .Sum(group => group.Key * group.Count());
+            
+        Console.WriteLine("\n==============Output==============\n");
         Console.WriteLine(totalDistance);
         Console.WriteLine(similarityScore);
     }
