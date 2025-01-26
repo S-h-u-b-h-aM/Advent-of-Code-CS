@@ -37,7 +37,7 @@ public static class Common
 
     public static IEnumerable<string> ReadLines(this TextReader reader)
     {
-        while (reader.ReadLine() is string line)
+        while (reader.ReadLine() is { } line)
         {
             yield return line;
         }
