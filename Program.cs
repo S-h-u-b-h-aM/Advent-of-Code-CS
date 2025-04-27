@@ -10,12 +10,10 @@ public static class Program
         // var testData = File.ReadAllText(filepath);
         // Day01.Run(testData);
 
-        var text2ClassMap = Text2ClassMap();
-        
-        
-        string filename = "Day05.txt";
+        Dictionary<string, Action<string>> text2ClassMap = Text2ClassMap();
+        string filename = "Day06.txt";
         string filepath = Path.Join(GetResourceDirectory(), filename);
-        var testData = File.ReadAllText(filepath);
+        string testData = File.ReadAllText(filepath);
         
         text2ClassMap[filename].Invoke(testData);
     }
@@ -34,6 +32,7 @@ public static class Program
         text2class_map["Day03.txt"] = Day03.Run;
         text2class_map["Day04.txt"] = Day04.Run;
         text2class_map["Day05.txt"] = Day05.Run;
+        text2class_map["Day06.txt"] = Day06.Run;
         
         return text2class_map;
     }
