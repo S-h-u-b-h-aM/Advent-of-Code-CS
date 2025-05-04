@@ -11,7 +11,7 @@ public static class Program
         // Day01.Run(testData);
 
         Dictionary<string, Action<string>> text2ClassMap = Text2ClassMap();
-        string filename = "Day06.txt";
+        string filename = "Day07.txt";
         string filepath = Path.Join(GetResourceDirectory(), filename);
         string testData = File.ReadAllText(filepath);
         
@@ -33,6 +33,7 @@ public static class Program
         text2class_map["Day04.txt"] = Day04.Run;
         text2class_map["Day05.txt"] = Day05.Run;
         text2class_map["Day06.txt"] = Day06.Run;
+        text2class_map["Day07.txt"] = Day07.Run;
         
         return text2class_map;
     }
