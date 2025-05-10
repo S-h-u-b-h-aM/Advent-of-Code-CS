@@ -8,24 +8,40 @@ public static class Day10
             .Select(row => row.ToCharArray())
             .ToArray();
         int totalScore = map.GetTrailHeads().Sum(trailhead => trailhead.GetScore(map));
-        Console.WriteLine($"Total score: {totalScore}");
+        int totalRatings = map.GetTrailHeads().Sum(trailhead => trailhead.GetRating(map));
+        Console.WriteLine($"  Total score: {totalScore}");
+        Console.WriteLine($"Total ratings: {totalRatings}");
     }
     private static int GetScore(this Point trailhead, char[][] map) =>
-        trailhead.WalkFrom(map).Count(point => map.At(point) == '9');
-    private static IEnumerable<Point> WalkFrom(this Point trailhead, char[][] map)
+        trailhead.WalkFrom(map).Count(state => map.At(state.point) == '9');
+    private static int GetRating(this Point trailhead, char[][] map) => 
+        trailhead.WalkFrom(map).Where(state => map.At(state.point) == '9').Sum(state => state.count);
+    private static IEnumerable<(Point point, int count)> WalkFrom(this Point trailhead, char[][] map)
     {
         // Breadth First Search
-        HashSet<Point> visited = [];
+        Dictionary<Point, int> pathsCount = new() { [trailhead] = 1 };
+        // HashSet<Point> visited = [];
         Queue<Point> queue = [];
         
         queue.Enqueue(trailhead);
         while (queue.Count > 0)
         {
             Point current = queue.Dequeue();
-            if (!visited.Add(current)) continue;
-            yield return current;
+            // if (!visited.Add(current)) continue;
+            yield return (current, pathsCount[current]);
 
-            foreach (Point neighbour in map.GetUphillNeighbours(current)) queue.Enqueue(neighbour);
+            foreach (Point neighbour in map.GetUphillNeighbours(current))
+            {
+                if (pathsCount.ContainsKey(neighbour))
+                {
+                    pathsCount[neighbour] += pathsCount[current];
+                }
+                else
+                {
+                    pathsCount[neighbour] = pathsCount[current];
+                    queue.Enqueue(neighbour);
+                }
+            }
         }
     }
     private static IEnumerable<Point> GetUphillNeighbours(this char[][] map, Point point) =>
