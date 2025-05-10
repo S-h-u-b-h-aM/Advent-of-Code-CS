@@ -5,8 +5,10 @@ public static class Day09
     public static void Run(string inputText)
     {
         List<Fragment> disc = new StringReader(inputText).ReadDisc().ToList();
-        long checksum = disc.Compact().Sum(GetChecksum);
-        Console.WriteLine(checksum);
+        long checksum = disc.Compact(MoveBlocks).Sum(GetChecksum);
+        long fileMovingChecksum = disc.Compact(MoveFiles).Sum(GetChecksum);
+        Console.WriteLine($"Block moving checksum: {checksum}");
+        Console.WriteLine($" File moving checksum: {fileMovingChecksum}");
     }
     
     // pos               + (pos + 1)         + .... +  (pos + len - 1)
@@ -16,8 +18,13 @@ public static class Day09
     // len * (2*pos + len - 1) / 2
     private static long GetChecksum(this FileFragment file) => 
         (long)file.FileID * file.Length * (2 * file.Position + file.Length - 1) / 2;
-    
-    private static IEnumerable<FileFragment> Compact(this IEnumerable<Fragment> disc)
+
+    delegate int MoveConstraint(FileFragment file);
+    private static int MoveBlocks(FileFragment file) => 0;
+    private static int MoveFiles(FileFragment file) => file.Length;
+
+    private static IEnumerable<FileFragment> Compact(this IEnumerable<Fragment> disc) => disc.Compact(MoveBlocks);
+    private static IEnumerable<FileFragment> Compact(this IEnumerable<Fragment> disc, MoveConstraint constraint)
     {
         var files = disc.OfType<FileFragment>().OrderByDescending(file => file.Position);
         IEnumerable<Gap> gaps = disc.OfType<Gap>().OrderBy(gap => gap.Position);
@@ -29,6 +36,13 @@ public static class Day09
             foreach (Gap gap in gaps.Where(gap => gap.Position < file.Position))
             {
                 int move = Math.Min(pendingBlocks, gap.Length);
+
+                if (move < constraint.Invoke(file))
+                {
+                    remainingGaps.Add(gap);
+                    continue;
+                }
+                
                 if (move > 0) yield return file with { Position = gap.Position, Length = move };
                 if (gap.Length > move) remainingGaps.Add(new(Position: gap.Position + move, Length: gap.Length -move));
                 pendingBlocks -= move;
