@@ -35,6 +35,7 @@ public static class Program
         text2class_map["Day06.txt"] = Day06.Run;
         text2class_map["Day07.txt"] = Day07.Run;
         text2class_map["Day08.txt"] = Day08.Run;
+        text2class_map["Day09.txt"] = Day09.Run;
         
         return text2class_map;
     }
