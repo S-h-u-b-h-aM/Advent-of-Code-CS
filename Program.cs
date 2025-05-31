@@ -40,7 +40,7 @@ public static class Program
         text2class_map["Day11.txt"] = Day11.Run;
         text2class_map["Day12.txt"] = Day12.Run;
         text2class_map["Day13.txt"] = Day13.Run;
-        
+        text2class_map["Day14.txt"] = Day14.Run;
         return text2class_map;
     }
 
