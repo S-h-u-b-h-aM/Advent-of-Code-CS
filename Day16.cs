@@ -3,9 +3,9 @@ using System.Collections.Immutable;
 namespace Advent_of_Code;
 public static class Day16
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        char[][] maze = new StringReader(inputText).ReadMaze();
+        char[][] maze = In.ReadMaze();
         int stepCost = 1, turnCost = 1000;
         
         var (cheapestPath, paths) = maze.FindCheapestPath(stepCost, turnCost);

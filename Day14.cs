@@ -2,9 +2,9 @@ namespace Advent_of_Code;
 
 public static class Day14
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var robots = new StringReader(inputText).ReadRobots().ToList();
+        var robots = In.ReadRobots().ToList();
         Coordinates roomSize = new(101, 103);
         int time = 100;
         

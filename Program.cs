@@ -10,23 +10,22 @@ public static class Program
         // var testData = File.ReadAllText(filepath);
         // Day01.Run(testData);
 
-        Dictionary<string, Action<string>> text2ClassMap = Text2ClassMap();
+        Dictionary<string, Action<StringReader>> text2ClassMap = Text2ClassMap();
         string filename = text2ClassMap.Last().Key; // The last filename in Test Data. 
         string filepath = Path.Join(GetResourceDirectory(), filename);
         string testData = File.ReadAllText(filepath);
-        
-        text2ClassMap[filename].Invoke(testData);
+        StringReader inputText = new StringReader(testData);
+        text2ClassMap[filename].Invoke(inputText);
     }
-
     private static string GetDatafromTextFile(string filepath)
     {
         string text = File.ReadAllText(filepath);
         return text;
     }
 
-    private static Dictionary<string, Action<string>> Text2ClassMap()
+    private static Dictionary<string, Action<StringReader>> Text2ClassMap()
     {
-        Dictionary<string, Action<string>> text2class_map = new();
+        Dictionary<string, Action<StringReader>> text2class_map = new();
         text2class_map["Day01.txt"] = Day01.Run;
         text2class_map["Day02.txt"] = Day02.Run;
         text2class_map["Day03.txt"] = Day03.Run;

@@ -4,11 +4,10 @@ namespace Advent_of_Code;
 
 public static class Day01
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
         Console.WriteLine("Day 1");
-        Console.WriteLine("Input test data:\n" + inputText);
-        (List<int> left, List<int> right) = new StringReader(inputText).LoadLists();
+        (List<int> left, List<int> right) = In.LoadLists();
 
         int totalDistance = left.Order()
             .Zip(right.Order(), (x, y) => Math.Abs(x - y))

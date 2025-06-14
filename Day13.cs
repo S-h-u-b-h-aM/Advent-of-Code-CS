@@ -5,9 +5,9 @@ public static class Day13
     private static readonly int _costAPresess = 3;
     private static readonly int _costBPresess = 1;
     private static readonly long _offset = 10000000000000 ;
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var machines = new StringReader(inputText).ReadMachines().ToList();
+        var machines = In.ReadMachines().ToList();
         long totalCost = machines.SelectMany(GetCheapestPlay).ToCost();
         long farCost = machines.Select(ToCorrectedMachine).SelectMany(GetCheapestPlay).ToCost();
         Console.WriteLine($"    Total cost: {totalCost}");

@@ -4,9 +4,9 @@ namespace Advent_of_Code;
 
 public static class Day06
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        char[][] map = new StringReader(inputText).ReadLines()
+        char[][] map = In.ReadLines()
             .Select(row => row.ToCharArray())
             .ToArray();
         

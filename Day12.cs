@@ -2,9 +2,9 @@ namespace Advent_of_Code;
 
 public static class Day12
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var map = new StringReader(inputText).ReadMap();
+        var map = In.ReadMap();
         var regions = map.GetRegions().ToList();
         
         int totalCost = regions.Sum(region => region.Cost(map));

@@ -4,15 +4,14 @@ namespace Advent_of_Code;
 
 public static class Day05
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var textReader = new StringReader(inputText);
-        var sortOrder = textReader.ReadSortOrder().ToHashSet();
+        var sortOrder = In.ReadSortOrder().ToHashSet();
         IComparer<int> comparer = Comparer<int>.Create((a,b) => 
             sortOrder.Contains((a,b)) ? -1 
                 : sortOrder.Contains((b,a)) ? 1
                 : 0);
-        List<List<int>> allPrints = textReader.ReadPrinedPages().ToList();
+        List<List<int>> allPrints = In.ReadPrinedPages().ToList();
 
         var middlePageSum = allPrints
             .Where(pages => pages.IsSorted(comparer))

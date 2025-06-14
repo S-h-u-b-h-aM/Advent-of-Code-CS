@@ -2,9 +2,9 @@ namespace Advent_of_Code;
 
 public static class Day11
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        IEnumerable<long> numbers = new StringReader(inputText).ReadNumbers();
+        IEnumerable<long> numbers = In.ReadNumbers();
         long count25 = numbers.CountDescendents(25);
         long count75 = numbers.CountDescendents(75);
         

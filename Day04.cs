@@ -7,9 +7,9 @@ namespace Advent_of_Code;
 
 public static class Day04
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var matrix = new StringReader(inputText).ReadLines().ToList();
+        var matrix = In.ReadLines().ToList();
         int rows = matrix.Count;
         int cols = matrix[0].Length;
 

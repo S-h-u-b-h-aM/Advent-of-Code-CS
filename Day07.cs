@@ -2,9 +2,9 @@ namespace Advent_of_Code;
 
 public static class Day07
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        List<Equation> equations = new StringReader(inputText).ReadEquation().ToList();
+        List<Equation> equations = In.ReadEquation().ToList();
         long simpleCalibration = equations.Where( eq => eq.CanProduceResult(Addition, Multiplicaiton))
             .Sum(eq => eq.Result);
         long extendedCalibration = equations.Where( eq => eq.CanProduceResult(Addition, Multiplicaiton, Concatination))

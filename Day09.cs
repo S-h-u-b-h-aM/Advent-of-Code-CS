@@ -2,9 +2,9 @@ namespace Advent_of_Code;
 
 public static class Day09
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        List<Fragment> disc = new StringReader(inputText).ReadDisc().ToList();
+        List<Fragment> disc = In.ReadDisc().ToList();
         long checksum = disc.Compact(MoveBlocks).Sum(GetChecksum);
         long fileMovingChecksum = disc.Compact(MoveFiles).Sum(GetChecksum);
         Console.WriteLine($"Block moving checksum: {checksum}");

@@ -4,12 +4,11 @@ namespace Advent_of_Code;
 
 public static class Day02
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
         Console.WriteLine("Day 2");
-        Console.WriteLine("Input test data:\n" + inputText);
         
-        List<List<int>> allLists = new StringReader(inputText).LoadLists();
+        List<List<int>> allLists = In.LoadLists();
         int safeCount = allLists.Count(IsSafe);
         int tolerantSafeCount = allLists.Count(list => list.Expand().Any(IsSafe));
         

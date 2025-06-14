@@ -2,11 +2,10 @@ namespace Advent_of_Code;
 
 public static class Day15
 {
-    public static void Run(string inputText)
+    public static void Run(StringReader In)
     {
-        var input = new StringReader(inputText);
-        State state = input.ReadState();
-        List<Step> steps = input.ReadSteps().ToList();
+        State state = In.ReadState();
+        List<Step> steps = In.ReadSteps().ToList();
 
         int totalGps = state.Apply(steps).Boxes.Index.Values.Sum(GetGPS);
         int scaledGps = state.Scale().Apply(steps).Boxes.Index.Values.Distinct().Sum(GetGPS);
