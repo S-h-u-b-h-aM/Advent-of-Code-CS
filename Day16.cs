@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Advent_of_Code;
 public static class Day16
 {
@@ -6,24 +8,34 @@ public static class Day16
         char[][] maze = new StringReader(inputText).ReadMaze();
         int stepCost = 1, turnCost = 1000;
         
-        int cheapestPath = maze.FindCheapestPath(stepCost, turnCost);
-        Console.WriteLine(cheapestPath);
+        var (cheapestPath, paths) = maze.FindCheapestPath(stepCost, turnCost);
+        int pathLengths = paths.Distinct().Count();
+        
+        Console.WriteLine($"     Cheapest path: {cheapestPath}");
+        Console.WriteLine($"Total path lengths: {pathLengths}");
     }
+    private static ReachedState ToReachedState(this Point point) => new(0, new[] { point }.ToImmutableList());
 
-    private static int FindCheapestPath(this char[][] maze, int stepCost, int turnCost)
+    private static ReachedState Add(this ReachedState reached, Point point, int cost) =>
+        new(cost, reached.FootSteps.Add(point));
+    private static ReachedState MergeWith(this ReachedState reached, ReachedState? other) =>
+        other is null ? reached
+        : reached.Cost < other.Cost ? reached
+        : reached with { FootSteps = reached.FootSteps.AddRange(other.FootSteps) };
+    private static ReachedState FindCheapestPath(this char[][] maze, int stepCost, int turnCost)
     {
         State startNode = new(maze.GetStartPosition(), new Direction(0, 1));
         
-        Dictionary<State, int> costs = new(){ [startNode] = 0 };
+        Dictionary<State, ReachedState> reach = new() { [startNode] = startNode.Position.ToReachedState() };
         HashSet<State> visited = [];
         PriorityQueue<State, int> queue = new([(startNode, 0)]);
 
         while (queue.Count > 0)
         {
             State current = queue.Dequeue();
-            if (maze.IsEnd(current.Position)) return costs[current];
+            if (maze.IsEnd(current.Position)) return reach[current];
             if (!visited.Add(current)) continue;
-            int cost = costs[current];
+            (int cost, _) = reach[current];
             (State State, int cost)[] neighbours = 
             [
                 (current.StepForward(), cost + stepCost),
@@ -33,9 +45,12 @@ public static class Day16
             foreach ((State state, int cost) neighbour in neighbours)
             {
                 if (!maze.IsEmpty(neighbour.state.Position)) continue;
-                if (costs.TryGetValue(neighbour.state, out int currentCost) && neighbour.cost >= currentCost) continue;
+                if (reach.TryGetValue(neighbour.state, out ReachedState? reachedNeighbour) && neighbour.cost > reachedNeighbour.Cost) continue;
                 
-                costs[neighbour.state] = neighbour.cost;
+                reach[neighbour.state] = reach[current]
+                    .Add(neighbour.state.Position, neighbour.cost)
+                    .MergeWith(reachedNeighbour);
+                
                 queue.Enqueue(neighbour.state, neighbour.cost);
             }
         }
@@ -62,7 +77,7 @@ public static class Day16
     private static bool IsEnd(this char[][] maze, Point point) => maze[point.Row][point.Col] == 'E';
     private static char[][] ReadMaze(this TextReader textReader) =>
         textReader.ReadLines().Select(line => line.ToCharArray()).ToArray();
-    
+    record ReachedState(int Cost, ImmutableList<Point> FootSteps);  // Part 2
     record State(Point Position, Direction Orientation);
     record struct Direction(int RowStep, int ColStep);
     record struct Point(int Row, int Col);
