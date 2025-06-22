@@ -6,9 +6,56 @@ public static class Day17
     {
         Machine machine = In.ReadMachine();
         string output = string.Join(",", machine.Run());
-        Console.WriteLine(output);
+        long seed = machine.FindSelfReplicatingSeeds(0).Min();
+        
+        Console.WriteLine();
+        machine.PrintProgram();
+        Console.WriteLine();
+        
+        Console.WriteLine($"               Output: {output}");
+        Console.WriteLine($"Self-replicating seed: {seed}");
     }
 
+    private static IEnumerable<long> FindSelfReplicatingSeeds(this Machine machine, int offset) =>
+        machine.GetHigherSeeds(offset)
+            .SelectMany(ExtendSeed)
+            .Where(seed => machine.Run(seed).SequenceEqual(machine.Memory[offset..]));
+
+    private static IEnumerable<byte> Run(this Machine machine, long seed) => (machine with { A = seed }).Run();
+    private static IEnumerable<long> ExtendSeed(long seed) =>
+        Enumerable.Range(0, 8).Select(lower => (seed << 3) | (long)lower);
+    private static IEnumerable<long> GetHigherSeeds(this Machine machine, int offset) =>
+        offset == machine.Memory.Length - 1
+            ? [0]
+            : machine.FindSelfReplicatingSeeds(offset + 1).ToArray(); 
+    private static void PrintProgram(this Machine machine) =>
+        Enumerable.Range(0, machine.Memory.Length / 2)
+            .Select(i => machine with {IP = 2 * i})
+            .Select(ToPrintableInstruction)
+            .ToList()
+            .ForEach(Console.WriteLine);
+
+    private static string ToPrintableInstruction(this Machine machine) =>
+        (machine.Memory[machine.IP], machine.Memory[machine.IP + 1]) switch
+        {
+            (0, byte op) => $"A <- A >> {op.ToPrintable()}",
+            (1, byte op) => $"B <- B XOR {op}",
+            (2, byte op) => $"B <- {op.ToPrintable()} AND 7",
+            (3, byte op) => $"IP <- {op} (IF A = 0)",
+            (4, _) => $"B <- B XOR C",
+            (5, byte op) => $"OUT {op.ToPrintable()} AND 7",
+            (6, byte op) => $"B <- A >> {op.ToPrintable()}",
+            (7, byte op) => $"C <- A >> {op.ToPrintable()}",
+            _ => throw new InvalidOperationException("Invalid instruction"),
+        };
+
+    private static string ToPrintable(this byte combo) => combo switch
+    {
+        <= 3 => $"{combo}",
+        4 => "A",
+        5 => "B",
+        _ => "C"
+    };
     private static IEnumerable<byte> Run(this Machine machine)
     {
         while (machine.IP < machine.Memory.Length)
@@ -21,21 +68,21 @@ public static class Day17
     private static (byte? output, Machine machine) Step(this Machine m) =>
         m.FetchInstruction() switch
         {
-            (0, int op) => (null, m with {A = m.A >> op, IP = m.IP + 2 }),
-            (1, int op) => (null, m with {B = m.B ^ op, IP = m.IP + 2 }),
-            (2, int op) => (null, m with {B = op & 0x7, IP = m.IP + 2 }),
-            (3, int op) => (null, m with {IP = m.A == 0 ? m.IP + 2 : op }),
+            (0, long op) => (null, m with {A = m.A >> (int)op, IP = m.IP + 2 }),
+            (1, long op) => (null, m with {B = m.B ^ op, IP = m.IP + 2 }),
+            (2, long op) => (null, m with {B = op & 0x7, IP = m.IP + 2 }),
+            (3, long op) => (null, m with {IP = m.A == 0 ? m.IP + 2 : (int)op }),
             (4, _) => (null, m with {B = m.B ^ m.C, IP = m.IP + 2 }),
-            (5, int op) => ((byte)(op & 0x7), m with {IP = m.IP + 2 }),
-            (6, int op) => (null, m with {B = m.A >> op, IP = m.IP + 2 }),
-            (7, int op) => (null, m with {C = m.A >> op, IP = m.IP + 2 }),
+            (5, long op) => ((byte)(op & 0x7), m with {IP = m.IP + 2 }),
+            (6, long op) => (null, m with {B = m.A >> (int)op, IP = m.IP + 2 }),
+            (7, long op) => (null, m with {C = m.A >> (int)op, IP = m.IP + 2 }),
             _ => throw new InvalidOperationException("Invalid opcode"),
         };
 
-    private static (int opcode, int operand) FetchInstruction(this Machine machine) =>
+    private static (int opcode, long operand) FetchInstruction(this Machine machine) =>
         (machine.GetOpCode(), machine.GetOperand());
     private static int GetOpCode(this Machine machine) => machine.Memory[machine.IP];
-    private static int GetOperand(this Machine machine) =>
+    private static long GetOperand(this Machine machine) =>
         (machine.GetOpCode(), machine.Memory[machine.IP + 1]) switch
         {
             (1, byte operand) => operand,
@@ -67,5 +114,5 @@ public static class Day17
                     _ => machine with { Memory = fields.values.Select(v => (byte)v).ToArray() },
                 }
             );
-    record Machine(int A, int B, int C, int IP, byte[] Memory);
+    record Machine(long A, long B, long C, int IP, byte[] Memory);
 }
