@@ -8,10 +8,26 @@ public static class Day18
         var (width, height, startTime) = (71, 71, 1024);
         var maze = fallingBytes.Take(startTime).ToMaze(width, height);
         var shortestPath = maze.GetShortestPath();
-        Console.WriteLine(shortestPath);
-    }
+        var culprit = fallingBytes.FindCulprit(width, height);
+        if (shortestPath.HasValue) Console.WriteLine($"Shortest path out: {shortestPath.Value} steps");
+        else Console.WriteLine($"No shortest path found");
 
-    private static int GetShortestPath(this Maze maze)
+        Console.WriteLine($"Culprit byte at {culprit.X}, {culprit.Y}");
+}
+
+    private static Point FindCulprit(this List<Point> fallingBytes, int width, int height)
+    {
+        int withPassage = 0, noPassage = fallingBytes.Count;
+        while (noPassage - withPassage > 1)
+        {
+            int atTime = (withPassage + noPassage) / 2;
+            if (fallingBytes.Take(atTime).ToMaze(width, height).PathExists()) withPassage = atTime;
+            else noPassage = atTime;
+        }
+        return fallingBytes[noPassage - 1];
+    }
+    private static bool PathExists(this Maze maze) => maze.GetShortestPath() is not null;
+    private static int? GetShortestPath(this Maze maze)
     {
         (Point start, Point end) = (maze.GetStart(), maze.GetEnd());
         PriorityQueue<Point, int> queue = new([(start, 0)]);
@@ -25,7 +41,7 @@ public static class Day18
                 queue.Enqueue(neighbour, steps + 1);
             }
         }
-        throw new InvalidOperationException("No path found");
+        return null;
     }
     private static IEnumerable<Point> GetNeighbours(this Maze maze, Point p) =>
         new[]
