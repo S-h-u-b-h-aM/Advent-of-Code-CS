@@ -6,23 +6,25 @@ public static class Day19
     {
         var towels = In.ReadTowels().ToArray();
         var patterns = In.ReadPatterns().ToList();
-        int possibleCount = patterns.Count(pattern => pattern.CanCreate(towels));
+        int possibleCount = patterns.Count(pattern => pattern.CountArrangements(towels) > 0);
+        long totalCount = patterns.Sum(pattern => pattern.CountArrangements(towels));
         Console.WriteLine($"Possible patterns: {possibleCount}");
+        Console.WriteLine($"   Total patterns: {totalCount}");
     }
-    static bool CanCreate(this string pattern, string[] towels)
+    static long CountArrangements(this string pattern, string[] towels)
     {
-        bool[] possible = new bool[pattern.Length + 1];
-        possible[0] = true;
+        long[] counts = new long[pattern.Length + 1];
+        counts[0] = 1;
         for (int k = 0; k < pattern.Length; k++)
         {
-            if (!possible[k]) continue;
+            if (counts[k] == 0) continue;
             string remainingPattern = pattern[k..]; //.Substring(k);
             foreach (string towel in towels.Where(remainingPattern.StartsWith))
             {
-                possible[k + towel.Length] = true;
+                counts[k + towel.Length] += counts[k];
             }
         }
-        return possible[pattern.Length];
+        return counts[pattern.Length];
     }
     static IEnumerable<string> ReadPatterns(this TextReader text) =>
         text.ReadLines().Where(line => !string.IsNullOrWhiteSpace(line));
