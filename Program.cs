@@ -5,47 +5,41 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        // string filename = "Day01.txt";
-        // string filepath = Path.Join(GetResourceDirectory(), filename);
-        // var testData = File.ReadAllText(filepath);
-        // Day01.Run(testData);
-
-        Dictionary<string, Action<StringReader>> text2ClassMap = Text2ClassMap();
-        string filename = text2ClassMap.Last().Key; // The last filename in Test Data. 
+        string filename = Text2ClassMap.Last().Key; // The last filename in Test Data. 
         string filepath = Path.Join(GetResourceDirectory(), filename);
         string testData = File.ReadAllText(filepath);
         StringReader inputText = new StringReader(testData);
-        text2ClassMap[filename].Invoke(inputText);
+        Text2ClassMap[filename].Invoke(inputText);
     }
+
     private static string GetDatafromTextFile(string filepath)
     {
         string text = File.ReadAllText(filepath);
         return text;
     }
 
-    private static Dictionary<string, Action<StringReader>> Text2ClassMap()
+    private static Dictionary<string, Action<StringReader>> Text2ClassMap => new()
     {
-        Dictionary<string, Action<StringReader>> text2class_map = new();
-        text2class_map["Day01.txt"] = Day01.Run;
-        text2class_map["Day02.txt"] = Day02.Run;
-        text2class_map["Day03.txt"] = Day03.Run;
-        text2class_map["Day04.txt"] = Day04.Run;
-        text2class_map["Day05.txt"] = Day05.Run;
-        text2class_map["Day06.txt"] = Day06.Run;
-        text2class_map["Day07.txt"] = Day07.Run;
-        text2class_map["Day08.txt"] = Day08.Run;
-        text2class_map["Day09.txt"] = Day09.Run;
-        text2class_map["Day10.txt"] = Day10.Run;
-        text2class_map["Day11.txt"] = Day11.Run;
-        text2class_map["Day12.txt"] = Day12.Run;
-        text2class_map["Day13.txt"] = Day13.Run;
-        text2class_map["Day14.txt"] = Day14.Run;
-        text2class_map["Day15.txt"] = Day15.Run;
-        text2class_map["Day16.txt"] = Day16.Run;
-        text2class_map["Day17.txt"] = Day17.Run;
-        text2class_map["Day18.txt"] = Day18.Run;
-        return text2class_map;
-    }
+        ["Day01.txt"] = Day01.Run,
+        ["Day02.txt"] = Day02.Run,
+        ["Day03.txt"] = Day03.Run,
+        ["Day04.txt"] = Day04.Run,
+        ["Day05.txt"] = Day05.Run,
+        ["Day06.txt"] = Day06.Run,
+        ["Day07.txt"] = Day07.Run,
+        ["Day08.txt"] = Day08.Run,
+        ["Day09.txt"] = Day09.Run,
+        ["Day10.txt"] = Day10.Run,
+        ["Day11.txt"] = Day11.Run,
+        ["Day12.txt"] = Day12.Run,
+        ["Day13.txt"] = Day13.Run,
+        ["Day14.txt"] = Day14.Run,
+        ["Day15.txt"] = Day15.Run,
+        ["Day16.txt"] = Day16.Run,
+        ["Day17.txt"] = Day17.Run,
+        ["Day18.txt"] = Day18.Run,
+        ["Day19.txt"] = Day19.Run
+    };
 
     private static string GetResourceDirectory()
     {
